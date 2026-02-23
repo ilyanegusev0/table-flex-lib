@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+
+		<TargetFrameworks>net10.0;net8.0</TargetFrameworks>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+
+		<PackageId>TableFlex</PackageId>
+		<Title>TableFlex</Title>
+		<Version>1.0.0</Version>
+		<Authors>ilyanegusev</Authors>
+		<Description>**TableFlex** is a lightweight C# library for rendering console tables. It provides a simple way to align data into tables without manual formatting.</Description>
+
+		<RepositoryUrl>https://github.com/ilyanegusev0/table-flex-lib</RepositoryUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="README.md" Pack="true" PackagePath="" />
+	</ItemGroup>
+
+</Project>
