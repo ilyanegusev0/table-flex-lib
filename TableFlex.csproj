@@ -6,6 +6,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 
+		<PackageIcon>table-flex-logo.png</PackageIcon>
 		<PackageId>TableFlex</PackageId>
 		<Title>TableFlex</Title>
 		<Version>1.0.0</Version>
@@ -21,6 +22,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Include="docs/table-flex-logo.png" Pack="true" PackagePath="" />
 		<None Include="README.md" Pack="true" PackagePath="" />
 	</ItemGroup>
 

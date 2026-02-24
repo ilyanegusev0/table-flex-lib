@@ -1,3 +1,8 @@
+# **TableFlex**
+<img src="docs/table-flex-logo.svg" alt="TableFlex Logo" width="256"/>
+
+
+
 # Description
 
 **TableFlex** is a lightweight C# library for rendering console tables. It provides a simple way to align data into tables without manual formatting.
