@@ -1,4 +1,4 @@
-# **TableFlex**
+# TableFlex
 <img src="docs/table-flex-logo.svg" alt="TableFlex Logo" width="256"/>
 
 
