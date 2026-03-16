@@ -10,39 +10,24 @@ namespace TableFlex.Renderers
     {
         // FIELDS:
 
-        private int _spacing;
-        private char _symbol;
-
-        // PROPERTIES:
-
-        /// <summary>
-        /// Gets or sets the spacing between columns.
-        /// </summary>
-        public int Spacing
-        {
-            get => _spacing;
-            set => _spacing = value < 0 ? 0 : value;
-        }
-
-        /// <summary>
-        /// Gets or sets the symbol used for header separator lines.
-        /// </summary>
-        public char Symbol
-        {
-            get => _symbol;
-            set => _symbol = value;
-        }
+        private BorderMap _borderMap;
+        private RenderOptions _options;
 
         // CONSTURCTORS:
 
         /// <summary>
-        /// Initializes a new renderer with default settings.
+        /// Initializes a new renderer with custom options.
         /// </summary>
-        public TableRenderer()
+        public TableRenderer(BorderMap borderMap, RenderOptions options)
         {
-            Spacing = 5;
-            _symbol = '-';
+            _borderMap = borderMap;
+            _options = options;
         }
+
+        /// <summary>
+        /// Initializes a new renderer with default options.
+        /// </summary>
+        public TableRenderer(BorderMap borderMap) : this(borderMap, new RenderOptions()) { }
 
         // PUBLIC METHODS:
 
@@ -65,30 +50,43 @@ namespace TableFlex.Renderers
             if (table.Header != null)
             {
                 for (int i = 0; i < table.Header.Cells.Count; i++)
-                {
-                    widths[i] = table.Header.Cells[i].Content.Length;
-                }
+                    widths[i] = Math.Max(widths[i], table.Header.Cells[i].Content.Length + _options.Spacing);
             }
 
             // Rows
             foreach (var row in table.Rows)
             {
                 for (int i = 0; i < row.Cells.Count; i++)
-                    widths[i] = Math.Max(widths[i], row.Cells[i].Content.Length);
+                    widths[i] = Math.Max(widths[i], row.Cells[i].Content.Length + _options.Spacing);
             }
 
             var sb = new StringBuilder();
+
+            // Render outer top border
+            if (_options.ShowOuterBorder)
+                sb.AppendLine(RenderHorizontalBorder(widths, _borderMap.TopLeft, _borderMap.TopRight, _borderMap.TopSeparator));
 
             // Render headers
             if (table.Header != null)
             {
                 sb.AppendLine(RenderCells(table.Header.Cells, widths));
-                sb.AppendLine(new string(_symbol, widths.Sum() + _spacing * (columns - 1) + 1));
+                if (_options.ShowHeaderSeparator)
+                    sb.AppendLine(RenderHorizontalBorder(widths, _borderMap.LeftSeparator, _borderMap.RightSeparator, _borderMap.Cross));
             }
 
             // Render rows
-            foreach (var row in table.Rows)
-                sb.AppendLine(RenderCells(row.Cells, widths));
+            var rows = table.Rows;
+            for (int r = 0; r < rows.Count; r++)
+            {
+                sb.AppendLine(RenderCells(rows[r].Cells, widths));
+
+                if (_options.ShowRowSeparators && r < rows.Count - 1)
+                    sb.AppendLine(RenderHorizontalBorder(widths, _borderMap.LeftSeparator, _borderMap.RightSeparator, _borderMap.Cross));
+            }
+
+            // Render outer bottom border
+            if (_options.ShowOuterBorder)
+                sb.AppendLine(RenderHorizontalBorder(widths, _borderMap.BottomLeft, _borderMap.BottomRight, _borderMap.BottomSeparator));
 
             return sb.ToString();
         }
@@ -105,7 +103,38 @@ namespace TableFlex.Renderers
                 parts.Add(content.PadRight(widths[i]));
             }
 
-            return string.Join(new string(' ', _spacing), parts);
+            string separator = _options.ShowColumnSeparators ? _borderMap.Vertical.ToString() : string.Empty;
+            string rowContent = string.Join(separator, parts);
+
+            if (_options.ShowOuterBorder)
+                return _borderMap.Vertical + rowContent + _borderMap.Vertical;
+            else
+                return rowContent;
+
+        }
+
+        private string RenderHorizontalBorder(int[] widths, char left, char right, char separator)
+        {
+            var sb = new StringBuilder();
+
+            if (_options.ShowOuterBorder)
+                sb.Append(left);
+
+            for (int i = 0; i < widths.Length; i++)
+            {
+                sb.Append(new string(_borderMap.Horizontal, widths[i]));
+
+                if (i < widths.Length - 1)
+                {
+                    if (_options.ShowColumnSeparators)
+                        sb.Append(separator);
+                }
+            }
+
+            if (_options.ShowOuterBorder)
+                sb.Append(right);
+
+            return sb.ToString();
         }
     }
 }
