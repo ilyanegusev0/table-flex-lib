@@ -42,7 +42,7 @@ table.AddRow(1, "Alice", 9);
 table.AddRow(2, "Benjamin", 69);
 table.AddRow(3, "Bob", 27);
 
-TableRenderer tr = new TableRenderer(BorderPresets.Dotted);
+TableRenderer tr = new TableRenderer(BorderPresets.Unicode);
 
 Console.WriteLine(tr.Render(table));
 ```
